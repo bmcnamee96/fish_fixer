@@ -6,7 +6,7 @@ from config import OPENAI_API_KEY
 
 openai.api_key = OPENAI_API_KEY
 
-MODEL = "gpt-3.5-turbo"
+MODEL = "gpt-4o"
 
 app = Flask(__name__, static_folder='static')
 
@@ -55,7 +55,7 @@ def system_message():
     return (
         "You are a fish health expert. Your job is to analyze the provided information to diagnose the fish’s condition and recommend treatments. Follow these guidelines:\n"
         "1. **Diagnosis**:\n"
-        "- Provide the most likely diagnosis based on the provided symptoms, water quality, and environment.\n"
+        "- Provide the top most likely diagnosis based on the provided symptoms, water quality, and environment.\n"
         "- If there are multiple possible diagnoses, list the top ones with brief explanations.\n"
         "2. **Symptoms to Monitor**:\n"
         "- List any additional symptoms that could help confirm the diagnosis or indicate other issues.\n"
