@@ -14,13 +14,21 @@ user_free_uses = {}
 
 @app.route('/use_service', methods=['POST'])
 def use_service():
-    data = request.json
+    # Extract form data and files
+    form_data = request.form.to_dict()
+    file = request.files.get('photo')
     
+    # Process the file if it is uploaded
+    if file:
+        # Example of saving the file (you can adjust this as needed)
+        file.save(f'/path/to/save/{file.filename}')
+        print(f"File saved: {file.filename}")
+
     # Generate the prompt
-    prompt = generate_prompt(data)
+    prompt = generate_prompt(preprocess_data(form_data))
     
     try:
-        # Make the API request using the updated method
+        # Make the API request
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",  # Or any other model you are using
             messages=[
@@ -61,9 +69,10 @@ def system_message():
         "**Treatment Recommendations**:\n"
         "- Recommend up to 3 treatments or actions, including medications and environmental changes.\n\n"
         "Use the data to provide the best possible diagnosis and practical treatment options."
+        "If not enough information is provided, please say 'I can not make a diagnosis with this information, please provide more.'"
     )
 
-def generate_prompt(data):
+def preprocess_data(data):
     # Remove keys with no value (empty strings, None, or empty lists)
     def clean_data(d):
         return {k: v for k, v in d.items() if v not in [None, '', [], {}]}
@@ -102,13 +111,51 @@ def generate_prompt(data):
         "history": clean_data({
             "pastIllness": data.get("pastIllness"),
             "currentTreatments": data.get("currentTreatments")
-        })
+        }),
+        "image": data.get("image")  # Add image data handling
     })
     
     # Remove nested dictionaries if they end up empty
     summary = {k: v for k, v in summary.items() if v}
     
     return summary
+
+summary = preprocess_data
+
+def generate_prompt(summary):
+    prompt = (
+        "Here is the information provided:\n"
+        f"**Water Type:** {summary.get('waterType', 'N/A')}\n"
+        f"**Species:** {summary.get('species', 'N/A')}\n"
+        f"**Age:** {summary.get('age', 'N/A')}\n"
+        f"**Number Affected:** {summary.get('number_affected', 'N/A')}\n"
+        f"**Symptoms:** {summary.get('symptoms', 'N/A')}\n"
+        f"**Behavioral Changes:** {summary.get('behavioralChanges', 'N/A')}\n"
+        f"**Length of Sickness:** {summary.get('lengthOfSickness', 'N/A')}\n"
+        f"**Water Quality:**\n"
+        f"  - **Temperature:** {summary.get('waterQuality', {}).get('temperature', 'N/A')}\n"
+        f"  - **pH:** {summary.get('waterQuality', {}).get('pH', 'N/A')}\n"
+        f"  - **Hardness:** {summary.get('waterQuality', {}).get('hardness', 'N/A')}\n"
+        f"  - **Nitrite:** {summary.get('waterQuality', {}).get('nitrite', 'N/A')}\n"
+        f"  - **Nitrate:** {summary.get('waterQuality', {}).get('nitrate', 'N/A')}\n"
+        f"  - **Ammonia:** {summary.get('waterQuality', {}).get('ammonia', 'N/A')}\n"
+        f"  - **Dissolved Oxygen:** {summary.get('waterQuality', {}).get('dissolvedOxygen', 'N/A')}\n"
+        f"  - **Conductivity:** {summary.get('waterQuality', {}).get('conductivity', 'N/A')}\n"
+        f"  - **Turbidity:** {summary.get('waterQuality', {}).get('turbidity', 'N/A')}\n"
+        f"**Environment:**\n"
+        f"  - **Type:** {summary.get('environment', {}).get('type', 'N/A')}\n"
+        f"  - **Size:** {summary.get('environment', {}).get('size', 'N/A')}\n"
+        f"  - **Water Change Schedule:** {summary.get('environment', {}).get('waterChangeSchedule', 'N/A')}\n"
+        f"  - **Recent Changes:** {summary.get('environment', {}).get('recentChanges', 'N/A')}\n"
+        f"  - **Feeding Habits:** {summary.get('environment', {}).get('feedingHabits', 'N/A')}\n"
+        f"  - **Other Species:** {summary.get('environment', {}).get('otherSpecies', 'N/A')}\n"
+        f"  - **Maintenance Routine:** {summary.get('environment', {}).get('maintenanceRoutine', 'N/A')}\n"
+        f"**History:**\n"
+        f"  - **Past Illness:** {summary.get('history', {}).get('pastIllness', 'N/A')}\n"
+        f"  - **Current Treatments:** {summary.get('history', {}).get('currentTreatments', 'N/A')}\n"
+    )
+    
+    return prompt
 
 @app.route('/subscribe', methods=['POST'])
 def subscribe():

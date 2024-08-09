@@ -106,18 +106,18 @@ button:hover {
 #directionsContainer p {
     font-size: 16px;
     margin-bottom: 10px;
-    color: #ffffff
+    color: #ffffff;
 }
 
 #directionsContainer ol {
     list-style-type: decimal;
     margin-left: 20px;
-    color: #ffffff
+    color: #ffffff;
 }
 
 #directionsContainer li {
     margin-bottom: 10px;
-    color: #ffffff
+    color: #ffffff;
 }
 
 #formContainer {
@@ -263,31 +263,20 @@ button[type="submit"]:hover {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
 }
-  
-/* Modal Background */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-  
+
 /* Modal Content */
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 10% auto; /* Centered vertically and horizontally */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.3); /* Shadow effect */
+    width: 80%; /* Adjust based on your preference */
+    max-width: 800px; /* Limit max width */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    text-align: left; /* Left-align the text inside the modal */
 }
-  
+
 /* Close Button */
 .close {
     color: #aaa;
@@ -307,21 +296,36 @@ button[type="submit"]:hover {
 .modal-text {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    text-align: left; /* Align text to the left */
 }
 
+/* Modal Text Styles */
 .modal-text h1 {
-    font-size: 1.5em;
-    margin-bottom: 0.5em;
+    font-size: 24px; /* Adjust as needed */
+    margin-bottom: 15px;
 }
 
-.modal-text ul {
-    list-style-type: disc;
-    margin-left: 1.5em;
+.modal-text h2 {
+    font-size: 20px; /* Adjust as needed */
+    margin-bottom: 10px;
+}
+
+.modal-text h3 {
+    font-size: 18px; /* Adjust as needed */
+    margin-bottom: 10px;
+}
+
+.modal-text p {
+    font-size: 16px; /* Adjust as needed */
+    line-height: 1.6;
+}
+
+.modal-text ul, .modal-text ol {
+    margin: 10px 0;
+    padding-left: 20px;
 }
 
 .modal-text li {
-    margin-bottom: 0.5em;
+    margin-bottom: 10px;
 }
   
 /* Support Section Styles */
@@ -364,11 +368,10 @@ footer {
     padding: 10px; /* Space around the text */
     text-align: center; /* Center-align the text */
     width: 1000px; 
-    color: white
+    color: white;
 }
 
 .disclaimer {
     font-size: 0.9em; /* Slightly smaller text */
     color: #ffffff; /* Darker text color for readability */
 }
-
