@@ -103,7 +103,7 @@ def generate_prompt(data):
         "History:\n"
         f"Past Illness: {data.get('pastIllness', 'N/A')}\n"
         f"Current Treatments: {data.get('currentTreatments', 'N/A')}\n\n"
-        "Please provide a detailed diagnosis and up to 4 treatment options."
+        "Please provide a detailed diagnosis and up to 3 treatment options."
     )
 
 @app.route('/subscribe', methods=['POST'])

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageDiv = document.getElementById('message');
     const formContainer = document.getElementById('formContainer');
     const closeFormButton = document.getElementById('closeForm');
-    const serviceForm = document.getElementById('serviceForm'); // Ensure 'serviceForm' is an ID
+    const serviceForm = document.getElementById('serviceForm');
     const directionsContainer = document.getElementById('directionsContainer');
     const supportContainer = document.getElementById('supportContainer');
     
@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         useServiceButton.addEventListener('click', function() {
             checkFreeUses(); // Call the function with parentheses
             directionsContainer.classList.add('hidden');
-            supportContainer.classList.add('hidden')
             formContainer.classList.remove('hidden');
         });
     }

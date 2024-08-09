@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-html, body {
+html, body, .all {
     height: 100%;
     margin: 0;
     display: flex;
@@ -14,11 +14,25 @@ html, body {
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f0f0f0;
     color: #333;
     text-align: center;
     padding: 20px;
     align-items: center;
+}
+
+body {
+    background-image: url('images/water.png');
+    background-size: cover;  /* This makes sure the image covers the entire background */
+    background-repeat: no-repeat;  /* Prevents the image from repeating */
+    background-attachment: fixed;  /* Keeps the background fixed while scrolling */
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.all {
+    backdrop-filter: blur(10px); /* Apply a blur effect to the background behind the container */
+    -webkit-backdrop-filter: blur(10px);
 }
 
 main {
@@ -26,12 +40,12 @@ main {
 }
 
 h1 {
-    color: #2c3e50;
+    color: #ffffff;
     margin-bottom: 20px;
 }
 
 button {
-    background-color: #3498db;
+    background-color: #000000;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -42,7 +56,7 @@ button {
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #5c5c5c;
     transform: scale(1.05);
 }
 
@@ -56,12 +70,11 @@ button:hover {
 
 /* Spinner Styles */
 .spinner {
-    display: none; /* Hidden by default */
+    display: none; 
     position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border: 16px solid #f3f3f3; /* Light grey */
+    left: 47%;
+    top: 40%;
+    border: 16px solid #808080; /* Light grey */
     border-top: 16px solid #3498db; /* Blue */
     border-radius: 50%;
     width: 120px;
@@ -76,37 +89,40 @@ button:hover {
 }
 
 #directionsContainer {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
+    backdrop-filter: blur(10px); /* Apply a blur effect to the background behind the container */
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 5px;
     padding: 20px;
     margin-bottom: 20px;
     text-align: left;
     width: 1000px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #directionsContainer h2 {
-    color: #2c3e50;
+    color: #ffffff;
     margin-bottom: 15px;
 }
 
 #directionsContainer p {
     font-size: 16px;
     margin-bottom: 10px;
+    color: #ffffff
 }
 
 #directionsContainer ol {
     list-style-type: decimal;
     margin-left: 20px;
+    color: #ffffff
 }
 
 #directionsContainer li {
     margin-bottom: 10px;
+    color: #ffffff
 }
 
 #formContainer {
-    background-color: #fff;
+    backdrop-filter: blur(10px); /* Apply a blur effect to the background behind the container */
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -117,19 +133,19 @@ button:hover {
 
 #formContainer h2 {
     margin-bottom: 20px;
-    color: #2c3e50;
+    color: #ffffff;
 }
 
 #formContainer h5 {
     margin: 20px 0 10px;
-    color: #2c3e50;
+    color: #ffffff;
 }
 
 label {
     display: flex;
     align-items: center; /* Center text vertically */
     font-size: 14px;
-    color: #333;
+    color: #ffffff;
 }
 
 input[type="text"],
@@ -141,11 +157,12 @@ input[type="file"] {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
+    color: #000000;
 }
 
 input[type="checkbox"] {
     margin-right: 10px; /* Space between checkbox and label */
-    accent-color: #3498db; /* Custom color for checkbox */
+    accent-color: #000000; /* Custom color for checkbox */
 }
 
 input[type="file"] {
@@ -309,7 +326,6 @@ button[type="submit"]:hover {
   
 /* Support Section Styles */
 .support {
-    background-color: #f1f1f1; /* Light background for contrast */
     padding: 20px; /* Space around the content */
     border-radius: 8px; /* Rounded corners */
     margin: 20px 0; /* Space around the section */
@@ -335,24 +351,24 @@ button[type="submit"]:hover {
 }
 
 .support a {
-    color: #007bff; /* Link color */
-    text-decoration: none; /* Remove underline */
+    color: #ffffff; /* Link color */
 }
 
 .support a:hover {
     text-decoration: underline; /* Underline on hover for better accessibility */
 }
 
-/* Footer Styles */
 footer {
-    background-color: #f1f1f1; /* Light gray background */
+    backdrop-filter: blur(10px); /* Apply a blur effect to the background behind the container */
+    -webkit-backdrop-filter: blur(10px);
     padding: 10px; /* Space around the text */
     text-align: center; /* Center-align the text */
-    width: 100%; /* Full width */
+    width: 1000px; 
+    color: white
 }
 
 .disclaimer {
     font-size: 0.9em; /* Slightly smaller text */
-    color: #333; /* Darker text color for readability */
+    color: #ffffff; /* Darker text color for readability */
 }
 
