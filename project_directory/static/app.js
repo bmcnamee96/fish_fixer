@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Show / hide the form for a user to fill out
     function showForm() {
         console.log('Showing form');
         formContainer.classList.remove('hidden');
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formContainer.classList.add('hidden');
     }
 
+    // show / hide the spinner when loading
     function showSpinner() {
         console.log('Showing spinner');
         spinner.style.display = 'block';
@@ -60,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
+    // show the response diagnosis
     function showModal(responseText) {
         console.log('Showing modal with text:', responseText);
         
@@ -93,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(imgElement);
     }
 
+    // submit the form
     function submitForm(event) {
         event.preventDefault();
         showSpinner();

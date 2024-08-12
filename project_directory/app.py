@@ -15,7 +15,7 @@ user_free_uses = {}
 @app.route('/use_service', methods=['POST'])
 def use_service():
     # Extract form data and files
-    form_data = request.form.to_dict()
+    data = request.form.to_dict()
     file = request.files.get('photo')
     
     # Process the file if it is uploaded
@@ -25,7 +25,7 @@ def use_service():
         print(f"File saved: {file.filename}")
 
     # Generate the prompt
-    prompt = generate_prompt(preprocess_data(form_data))
+    prompt = generate_prompt(data)
     
     try:
         # Make the API request
@@ -72,20 +72,21 @@ def system_message():
         "If not enough information is provided, please say 'I can not make a diagnosis with this information, please provide more.'"
     )
 
-def preprocess_data(data):
-    # Remove keys with no value (empty strings, None, or empty lists)
+def generate_prompt(data):
+    # Function to clean data and remove empty or irrelevant values
     def clean_data(d):
         return {k: v for k, v in d.items() if v not in [None, '', [], {}]}
-    
-    summary = clean_data({
+
+    # Clean the input data
+    cleaned_data = clean_data({
         "waterType": data.get("waterType"),
         "species": data.get("species"),
         "age": data.get("age"),
         "length": data.get("length"),
         "weight": data.get("weight"),
         "number_affected": data.get("number_affected"),
-        "symptoms": ", ".join(data.get("symptoms", []))[:100] if data.get("symptoms") else None,
-        "behavioralChanges": data.get("behavioralChanges", "")[:100] if data.get("behavioralChanges") else None,
+        "symptoms": ", ".join(data.get("symptoms", [])) if data.get("symptoms") else None,
+        "behavioralChanges": data.get("behavioralChanges"),
         "lengthOfSickness": data.get("lengthOfSickness"),
         "severity": data.get("severity"),
         "waterQuality": clean_data({
@@ -103,7 +104,7 @@ def preprocess_data(data):
             "type": data.get("environmentType"),
             "size": data.get("size"),
             "waterChangeSchedule": data.get("waterChangeSchedule"),
-            "recentChanges": data.get("recentChanges", "")[:100] if data.get("recentChanges") else None,
+            "recentChanges": data.get("recentChanges"),
             "feedingHabits": data.get("feedingHabits"),
             "otherSpecies": data.get("otherSpecies"),
             "maintenanceRoutine": data.get("maintenanceRoutine")
@@ -111,51 +112,57 @@ def preprocess_data(data):
         "history": clean_data({
             "pastIllness": data.get("pastIllness"),
             "currentTreatments": data.get("currentTreatments")
-        }),
-        "image": data.get("image")  # Add image data handling
+        })
     })
-    
-    # Remove nested dictionaries if they end up empty
-    summary = {k: v for k, v in summary.items() if v}
-    
-    return summary
 
-summary = preprocess_data
+    # Remove nested dictionaries if they are empty
+    cleaned_data = {k: v for k, v in cleaned_data.items() if v}
 
-def generate_prompt(summary):
-    prompt = (
-        "Here is the information provided:\n"
-        f"**Water Type:** {summary.get('waterType', 'N/A')}\n"
-        f"**Species:** {summary.get('species', 'N/A')}\n"
-        f"**Age:** {summary.get('age', 'N/A')}\n"
-        f"**Number Affected:** {summary.get('number_affected', 'N/A')}\n"
-        f"**Symptoms:** {summary.get('symptoms', 'N/A')}\n"
-        f"**Behavioral Changes:** {summary.get('behavioralChanges', 'N/A')}\n"
-        f"**Length of Sickness:** {summary.get('lengthOfSickness', 'N/A')}\n"
-        f"**Water Quality:**\n"
-        f"  - **Temperature:** {summary.get('waterQuality', {}).get('temperature', 'N/A')}\n"
-        f"  - **pH:** {summary.get('waterQuality', {}).get('pH', 'N/A')}\n"
-        f"  - **Hardness:** {summary.get('waterQuality', {}).get('hardness', 'N/A')}\n"
-        f"  - **Nitrite:** {summary.get('waterQuality', {}).get('nitrite', 'N/A')}\n"
-        f"  - **Nitrate:** {summary.get('waterQuality', {}).get('nitrate', 'N/A')}\n"
-        f"  - **Ammonia:** {summary.get('waterQuality', {}).get('ammonia', 'N/A')}\n"
-        f"  - **Dissolved Oxygen:** {summary.get('waterQuality', {}).get('dissolvedOxygen', 'N/A')}\n"
-        f"  - **Conductivity:** {summary.get('waterQuality', {}).get('conductivity', 'N/A')}\n"
-        f"  - **Turbidity:** {summary.get('waterQuality', {}).get('turbidity', 'N/A')}\n"
-        f"**Environment:**\n"
-        f"  - **Type:** {summary.get('environment', {}).get('type', 'N/A')}\n"
-        f"  - **Size:** {summary.get('environment', {}).get('size', 'N/A')}\n"
-        f"  - **Water Change Schedule:** {summary.get('environment', {}).get('waterChangeSchedule', 'N/A')}\n"
-        f"  - **Recent Changes:** {summary.get('environment', {}).get('recentChanges', 'N/A')}\n"
-        f"  - **Feeding Habits:** {summary.get('environment', {}).get('feedingHabits', 'N/A')}\n"
-        f"  - **Other Species:** {summary.get('environment', {}).get('otherSpecies', 'N/A')}\n"
-        f"  - **Maintenance Routine:** {summary.get('environment', {}).get('maintenanceRoutine', 'N/A')}\n"
-        f"**History:**\n"
-        f"  - **Past Illness:** {summary.get('history', {}).get('pastIllness', 'N/A')}\n"
-        f"  - **Current Treatments:** {summary.get('history', {}).get('currentTreatments', 'N/A')}\n"
-    )
+    # Construct the prompt dynamically
+    prompt_sections = []
+
+    if "waterType" in cleaned_data:
+        prompt_sections.append(f"Water Type: {cleaned_data['waterType']}")
+    if "species" in cleaned_data:
+        prompt_sections.append(f"Species: {cleaned_data['species']}")
+    if "age" in cleaned_data:
+        prompt_sections.append(f"Approximate Age: {cleaned_data['age']}")
+    if "length" in cleaned_data:
+        prompt_sections.append(f"Approximate Length: {cleaned_data['length']}")
+    if "weight" in cleaned_data:
+        prompt_sections.append(f"Approximate Weight: {cleaned_data['weight']}")
+    if "number_affected" in cleaned_data:
+        prompt_sections.append(f"Number of Fish Affected: {cleaned_data['number_affected']}")
+    if "symptoms" in cleaned_data:
+        prompt_sections.append(f"Symptoms: {cleaned_data['symptoms']}")
+    if "behavioralChanges" in cleaned_data:
+        prompt_sections.append(f"Behavioral Changes: {cleaned_data['behavioralChanges']}")
+    if "lengthOfSickness" in cleaned_data:
+        prompt_sections.append(f"Length of Sickness: {cleaned_data['lengthOfSickness']}")
+    if "severity" in cleaned_data:
+        prompt_sections.append(f"Severity: {cleaned_data['severity']}")
     
-    return prompt
+    if "waterQuality" in cleaned_data:
+        water_quality = cleaned_data["waterQuality"]
+        water_quality_section = "\n".join([f"{k.capitalize()}: {v}" for k, v in water_quality.items()])
+        prompt_sections.append(f"Water Quality Parameters:\n{water_quality_section}")
+    
+    if "environment" in cleaned_data:
+        environment = cleaned_data["environment"]
+        environment_section = "\n".join([f"{k.replace('type', 'Type').capitalize()}: {v}" for k, v in environment.items()])
+        prompt_sections.append(f"Environment:\n{environment_section}")
+    
+    if "history" in cleaned_data:
+        history = cleaned_data["history"]
+        history_section = "\n".join([f"{k.replace('pastIllness', 'Past Illness').replace('currentTreatments', 'Current Treatments')}: {v}" for k, v in history.items()])
+        prompt_sections.append(f"History:\n{history_section}")
+
+    # Combine all sections into the final prompt
+    final_prompt = "Here is the fish health information:\n\n" + "\n\n".join(prompt_sections) + "\n\nPlease provide a detailed diagnosis and up to 4 treatment options."
+
+    print(final_prompt)
+    
+    return final_prompt
 
 @app.route('/subscribe', methods=['POST'])
 def subscribe():
