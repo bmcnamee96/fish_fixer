@@ -76,3 +76,47 @@
 
 - `tests/test_plan_doc.py`
   - Basic documentation tests to ensure `plan.md` exists and contains core migration sections.
+
+## React + Node Migration Scaffold
+
+### API: `apps/api/src/server.js`
+
+- `readJsonBody(req)`
+  - Reads and parses JSON request bodies with a basic size limit.
+- `sendJson(res, statusCode, payload)`
+  - Sends JSON responses with consistent content type.
+- `handleRequest(req, res)`
+  - Routes API requests for `/api/health`, `/api/cases`, `/api/chat`, and `/api/photos`.
+- `createServer()`
+  - Creates the Node HTTP server and centralizes async error handling.
+
+### API domain: `apps/api/src/diagnosisService.js`
+
+- `normalizeCaseInput(payload)`
+  - Normalizes snake_case/camelCase case fields for consistent backend processing.
+- `buildAssessment(normalizedInput)`
+  - Builds a structured scaffold assessment and safe next-step guidance.
+
+### API rules: `apps/api/src/rules.js`
+
+- `evaluateWaterQuality(observation)`
+  - Applies freshwater/saltwater water-quality threshold checks and returns safety alerts.
+
+### React app: `apps/web/src/App.jsx`
+
+- `App()`
+  - Root React migration scaffold that renders form/chat/photo mode sections.
+
+### React components: `apps/web/src/components/*.jsx`
+
+- `FormMode()`
+  - Placeholder section for structured fish diagnosis intake flow.
+- `ChatMode()`
+  - Placeholder section for conversational fish-health Q&A flow.
+- `PhotoMode()`
+  - Placeholder section for image upload-assisted analysis flow.
+
+### Tests
+
+- `tests/test_node_react_scaffold.py`
+  - Validates migration scaffold structure and API endpoint scaffolding contracts.
