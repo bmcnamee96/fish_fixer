@@ -68,3 +68,11 @@
 
 - `project_directory/Procfile`
   - Process entry: `web: python app.py`.
+
+## Planning and Quality Docs
+
+- `plan.md`
+  - Migration roadmap for fully transitioning Fish Fixer to React + Node, including architecture, phases, and definition of done.
+
+- `tests/test_plan_doc.py`
+  - Basic documentation tests to ensure `plan.md` exists and contains core migration sections.
