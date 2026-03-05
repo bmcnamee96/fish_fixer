@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "node apps/api/src/server.js",
     "dev:api": "node apps/api/src/server.js",
     "test": "pytest -q"
   }

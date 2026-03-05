@@ -53,3 +53,12 @@
   - Asserts the migration plan exists and includes core sections.
 - `tests/test_node_react_scaffold.py`
   - Verifies scaffold files/endpoints and freshwater/saltwater rule coverage.
+
+
+## Runtime
+
+- `Procfile`
+  - Heroku process entrypoint configured as `web: npm start`.
+
+- `package.json` scripts
+  - `start`: boots the Node API server for production/Heroku dynos.
