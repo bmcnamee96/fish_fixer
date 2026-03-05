@@ -31,10 +31,6 @@ function sendJson(res, statusCode, payload) {
 }
 
 async function handleRequest(req, res) {
-  if (req.method === 'GET' && req.url === '/') {
-    return sendJson(res, 200, { ok: true, service: 'fish-fixer-api', message: 'Fish Fixer API is running' });
-  }
-
   if (req.method === 'GET' && req.url === '/api/health') {
     return sendJson(res, 200, { ok: true, service: 'fish-fixer-api' });
   }
