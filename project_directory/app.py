@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, send_from_directory
 import openai
 import json
 import re
+import os
+from werkzeug.utils import secure_filename
 from config import OPENAI_API_KEY
 
 openai.api_key = OPENAI_API_KEY
@@ -10,19 +12,25 @@ MODEL = "gpt-4o"
 
 app = Flask(__name__, static_folder='static')
 
+UPLOAD_DIR = os.path.join(app.root_path, 'uploads')
+
 user_free_uses = {}
 
 @app.route('/use_service', methods=['POST'])
 def use_service():
     # Extract form data and files
     data = request.form.to_dict()
+    data["symptoms"] = request.form.getlist("symptoms")
     file = request.files.get('photo')
     
     # Process the file if it is uploaded
     if file:
-        # Example of saving the file (you can adjust this as needed)
-        file.save(f'/path/to/save/{file.filename}')
-        print(f"File saved: {file.filename}")
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
+        safe_name = secure_filename(file.filename)
+        if safe_name:
+            upload_path = os.path.join(UPLOAD_DIR, safe_name)
+            file.save(upload_path)
+            print(f"File saved: {upload_path}")
 
     # Generate the prompt
     prompt = generate_prompt(data)
@@ -73,45 +81,52 @@ def system_message():
     )
 
 def generate_prompt(data):
+    def get_value(d, snake_key, camel_key=None):
+        if snake_key in d and d.get(snake_key) not in [None, '', [], {}]:
+            return d.get(snake_key)
+        if camel_key and camel_key in d:
+            return d.get(camel_key)
+        return None
+
     # Function to clean data and remove empty or irrelevant values
     def clean_data(d):
         return {k: v for k, v in d.items() if v not in [None, '', [], {}]}
 
     # Clean the input data
     cleaned_data = clean_data({
-        "waterType": data.get("waterType"),
+        "waterType": get_value(data, "waterType"),
         "species": data.get("species"),
         "age": data.get("age"),
         "length": data.get("length"),
         "weight": data.get("weight"),
         "number_affected": data.get("number_affected"),
         "symptoms": ", ".join(data.get("symptoms", [])) if data.get("symptoms") else None,
-        "behavioralChanges": data.get("behavioralChanges"),
-        "lengthOfSickness": data.get("lengthOfSickness"),
+        "behavioralChanges": get_value(data, "behavioral_changes", "behavioralChanges"),
+        "lengthOfSickness": get_value(data, "length_of_sickness", "lengthOfSickness"),
         "severity": data.get("severity"),
         "waterQuality": clean_data({
             "temperature": data.get("temperature"),
-            "pH": data.get("pH"),
+            "pH": get_value(data, "ph", "pH"),
             "hardness": data.get("hardness"),
             "nitrite": data.get("nitrite"),
             "nitrate": data.get("nitrate"),
             "ammonia": data.get("ammonia"),
-            "dissolvedOxygen": data.get("dissolvedOxygen"),
+            "dissolvedOxygen": get_value(data, "dissolved_oxygen", "dissolvedOxygen"),
             "conductivity": data.get("conductivity"),
             "turbidity": data.get("turbidity")
         }),
         "environment": clean_data({
-            "type": data.get("environmentType"),
+            "type": get_value(data, "environment_type", "environmentType"),
             "size": data.get("size"),
-            "waterChangeSchedule": data.get("waterChangeSchedule"),
-            "recentChanges": data.get("recentChanges"),
-            "feedingHabits": data.get("feedingHabits"),
-            "otherSpecies": data.get("otherSpecies"),
-            "maintenanceRoutine": data.get("maintenanceRoutine")
+            "waterChangeSchedule": get_value(data, "water_change_schedule", "waterChangeSchedule"),
+            "recentChanges": get_value(data, "recent_changes", "recentChanges"),
+            "feedingHabits": get_value(data, "feeding_habits", "feedingHabits"),
+            "otherSpecies": get_value(data, "other_species", "otherSpecies"),
+            "maintenanceRoutine": get_value(data, "maintenance_routine", "maintenanceRoutine")
         }),
         "history": clean_data({
-            "pastIllness": data.get("pastIllness"),
-            "currentTreatments": data.get("currentTreatments")
+            "pastIllness": get_value(data, "past_illness", "pastIllness"),
+            "currentTreatments": get_value(data, "current_treatments", "currentTreatments")
         })
     })
 
