@@ -16,3 +16,9 @@ def test_procfile_uses_npm_start():
 def test_server_has_root_route():
     server = Path('apps/api/src/server.js').read_text(encoding='utf-8')
     assert "req.method === 'GET' && req.url === '/'" in server
+
+
+def test_server_root_route_returns_runtime_html_message():
+    server = Path('apps/api/src/server.js').read_text(encoding='utf-8')
+    assert 'Fish Fixer API is running' in server
+    assert 'sendHtml' in server

@@ -8,8 +8,11 @@
   - Parses JSON request payloads with a body-size guard.
 - `sendJson(res, statusCode, payload)`
   - Sends standard JSON responses.
+- `sendHtml(res, statusCode, html)`
+  - Sends HTML responses for non-API browser requests.
 - `handleRequest(req, res)`
-  - Routes API requests for:
+  - Routes browser/API requests for:
+    - `GET /` (runtime landing page for deployed app checks)
     - `GET /api/health`
     - `POST /api/cases`
     - `POST /api/chat`

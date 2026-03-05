@@ -30,7 +30,20 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
+function sendHtml(res, statusCode, html) {
+  res.writeHead(statusCode, { 'content-type': 'text/html; charset=utf-8' });
+  res.end(html);
+}
+
 async function handleRequest(req, res) {
+  if (req.method === 'GET' && req.url === '/') {
+    return sendHtml(
+      res,
+      200,
+      '<h1>Fish Fixer API is running</h1><p>Try <code>/api/health</code> for status.</p>'
+    );
+  }
+
   if (req.method === 'GET' && req.url === '/api/health') {
     return sendJson(res, 200, { ok: true, service: 'fish-fixer-api' });
   }
