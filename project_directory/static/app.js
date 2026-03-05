@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeFormButton = document.getElementById('closeForm');
     const serviceForm = document.getElementById('serviceForm');
     const directionsContainer = document.getElementById('directionsContainer');
-    const supportContainer = document.getElementById('supportContainer');
+    const supportContainer = document.getElementById('support');
     
     // Modal elements
     const modal = document.getElementById('responseModal');
@@ -150,7 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModalButton.onclick = function() {
         modal.style.display = "none";
         directionsContainer.classList.remove('hidden');
-        supportContainer.classList.remove('hidden'); 
+        if (supportContainer) {
+            supportContainer.classList.remove('hidden');
+        }
         formContainer.classList.add('hidden'); // Ensure the form is hidden   
     }
 
@@ -173,7 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
             hideForm(); // Call the function with parentheses
             formContainer.classList.add('hidden');
             directionsContainer.classList.remove('hidden');
-            supportContainer.classList.remove('hidden');
+            if (supportContainer) {
+                supportContainer.classList.remove('hidden');
+            }
         });
     }
 
